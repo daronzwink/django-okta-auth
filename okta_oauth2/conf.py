@@ -40,6 +40,7 @@ class Config:
             self.cache_alias = settings.OKTA_AUTH.get("CACHE_ALIAS", "default")
             self.cache_timeout = settings.OKTA_AUTH.get("CACHE_TIMEOUT", 600)
             self.use_username = settings.OKTA_AUTH.get("USE_USERNAME", False)
+            self.create_user = settings.OKTA_AUTH.get("CREATE_USER", True)
             self.public_urls = self.build_public_urls()
         except (AttributeError, KeyError):
             raise ImproperlyConfigured("Missing Okta authentication settings")

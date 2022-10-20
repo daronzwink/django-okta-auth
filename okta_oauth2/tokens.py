@@ -100,21 +100,27 @@ class TokenValidator:
             try:
                 user = UserModel._default_manager.get_by_natural_key(username)
             except UserModel.DoesNotExist:
-                user = UserModel._default_manager.create_user(
-                    username=username, email=claims["email"]
-                )
+                if self.config.create_user:
+                    user = UserModel._default_manager.create_user(
+                        username=username, email=claims["email"]
+                    )
 
-            user.is_superuser = bool(
-                self.config.superuser_group
-                and "groups" in claims
-                and self.config.superuser_group in claims["groups"]
-            )
-            user.is_staff = bool(
-                self.config.staff_group
-                and "groups" in claims
-                and self.config.staff_group in claims["groups"]
-            )
-            user.save()
+            if user and self.config.superuser_group:
+                user.is_superuser = bool(
+                    self.config.superuser_group
+                    and "groups" in claims
+                    and self.config.superuser_group in claims["groups"]
+                )
+            if user and self.config.staff_group:
+                user.is_staff = bool(
+                    self.config.staff_group
+                    and "groups" in claims
+                    and self.config.staff_group in claims["groups"]
+                )
+            if user and (
+                self.config.create_user or self.config.superuser_group or self.config.staff_group
+            ):
+                user.save()
 
             if self.config.manage_groups:
                 self.manage_groups(user, claims["groups"])
