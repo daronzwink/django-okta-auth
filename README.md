@@ -118,6 +118,7 @@ OKTA_AUTH = {
     "PUBLIC_NAMED_URLS": (), # default
     "PUBLIC_URLS": (), # default
     "USE_USERNAME": False, # default
+    "CREATE_USER": True, # default
 }
 ```
 
@@ -175,6 +176,7 @@ A minimal template for the login could be:
           function (res) {
               console.log(res);
           }
+      );
     </script>
   </body>
 </html>
